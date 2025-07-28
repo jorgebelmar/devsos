@@ -7,7 +7,7 @@ interface Appointment {
   title: string;
   date: string;
   time: string;
-  client: string;
+  provider: string;
   service: string;
   status: 'confirmed' | 'pending' | 'completed';
 }
@@ -19,49 +19,109 @@ const AgendaPage = () => {
       title: 'Consulta médica',
       date: '2025-01-22',
       time: '10:00',
-      client: 'Juan Pérez',
+      provider: 'Dr. Juan Pérez',
       service: 'Consulta general',
       status: 'confirmed'
     },
     {
       id: '2',
-      title: 'Revisión',
+      title: 'Cita odontológica',
       date: '2025-01-22',
       time: '14:30',
-      client: 'María García',
-      service: 'Revisión anual',
+      provider: 'Dra. María García',
+      service: 'Limpieza dental',
       status: 'pending'
     },
     {
       id: '3',
-      title: 'Tratamiento',
+      title: 'Sesión de fisioterapia',
       date: '2025-01-23',
       time: '09:15',
-      client: 'Carlos López',
-      service: 'Fisioterapia',
+      provider: 'Lic. Carlos López',
+      service: 'Rehabilitación',
       status: 'confirmed'
     }
   ]);
 
   const [showForm, setShowForm] = useState(false);
+  const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [appointmentToDelete, setAppointmentToDelete] = useState<string | null>(null);
   const [newAppointment, setNewAppointment] = useState({
     title: '',
     date: '',
     time: '',
-    client: '',
+    provider: '',
     service: ''
   });
 
   const handleAddAppointment = (e: React.FormEvent) => {
     e.preventDefault();
-    const appointment: Appointment = {
-      id: Date.now().toString(),
-      ...newAppointment,
-      status: 'pending'
-    };
-    setAppointments([...appointments, appointment]);
+    
+    if (editingAppointment) {
+      // Editar cita existente
+      const updatedAppointments = appointments.map(app =>
+        app.id === editingAppointment.id
+          ? { ...app, ...newAppointment }
+          : app
+      );
+      setAppointments(updatedAppointments);
+      setEditingAppointment(null);
+    } else {
+      // Agregar nueva cita
+      const appointment: Appointment = {
+        id: Date.now().toString(),
+        ...newAppointment,
+        status: 'pending'
+      };
+      setAppointments([...appointments, appointment]);
+    }
+    
     setNewAppointment({ title: '', date: '', time: '', client: '', service: '' });
     setShowForm(false);
+  };
+
+  const handleEditAppointment = (appointment: Appointment) => {
+    setEditingAppointment(appointment);
+    setNewAppointment({
+      title: appointment.title,
+      date: appointment.date,
+      time: appointment.time,
+      provider: appointment.provider,
+      service: appointment.service
+    });
+    setShowForm(true);
+  };
+
+  const handleDeleteClick = (appointmentId: string) => {
+    setAppointmentToDelete(appointmentId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (appointmentToDelete) {
+      setAppointments(appointments.filter(app => app.id !== appointmentToDelete));
+      setAppointmentToDelete(null);
+    }
+    setShowDeleteModal(false);
+  };
+
+  const cancelDelete = () => {
+    setAppointmentToDelete(null);
+    setShowDeleteModal(false);
+  };
+
+  const handleStatusChange = (appointmentId: string, newStatus: Appointment['status']) => {
+    const updatedAppointments = appointments.map(app =>
+      app.id === appointmentId ? { ...app, status: newStatus } : app
+    );
+    setAppointments(updatedAppointments);
+  };
+
+  const closeForm = () => {
+    setShowForm(false);
+    setEditingAppointment(null);
+    setNewAppointment({ title: '', date: '', time: '', provider: '', service: '' });
   };
 
   const getStatusColor = (status: string) => {
@@ -98,7 +158,7 @@ const AgendaPage = () => {
         {showForm && (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
-              <h3>Nueva Cita</h3>
+              <h3>{editingAppointment ? 'Editar Cita' : 'Nueva Cita'}</h3>
               <form onSubmit={handleAddAppointment}>
                 <input
                   type="text"
@@ -121,9 +181,9 @@ const AgendaPage = () => {
                 />
                 <input
                   type="text"
-                  placeholder="Cliente"
-                  value={newAppointment.client}
-                  onChange={(e) => setNewAppointment({...newAppointment, client: e.target.value})}
+                  placeholder="Profesional/Doctor"
+                  value={newAppointment.provider}
+                  onChange={(e) => setNewAppointment({...newAppointment, provider: e.target.value})}
                   required
                 />
                 <input
@@ -134,12 +194,31 @@ const AgendaPage = () => {
                   required
                 />
                 <div className={styles.modalButtons}>
-                  <button type="submit" className={styles.saveBtn}>Guardar</button>
-                  <button type="button" onClick={() => setShowForm(false)} className={styles.cancelBtn}>
+                  <button type="submit" className={styles.saveBtn}>
+                    {editingAppointment ? 'Guardar Cambios' : 'Guardar'}
+                  </button>
+                  <button type="button" onClick={closeForm} className={styles.cancelBtn}>
                     Cancelar
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {showDeleteModal && (
+          <div className={styles.confirmModal}>
+            <div className={styles.confirmContent}>
+              <h3>¿Eliminar cita?</h3>
+              <p>Esta acción no se puede deshacer. ¿Estás seguro de que quieres eliminar esta cita?</p>
+              <div className={styles.confirmButtons}>
+                <button onClick={confirmDelete} className={styles.confirmDeleteBtn}>
+                  Eliminar
+                </button>
+                <button onClick={cancelDelete} className={styles.cancelDeleteBtn}>
+                  Cancelar
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -159,8 +238,36 @@ const AgendaPage = () => {
               <div className={styles.appointmentDetails}>
                 <p><strong>📅 Fecha:</strong> {new Date(appointment.date).toLocaleDateString('es-ES')}</p>
                 <p><strong>🕐 Hora:</strong> {appointment.time}</p>
-                <p><strong>👤 Cliente:</strong> {appointment.client}</p>
+                <p><strong>�‍⚕️ Profesional:</strong> {appointment.provider}</p>
                 <p><strong>💼 Servicio:</strong> {appointment.service}</p>
+              </div>
+              <div className={styles.cardActions}>
+                <button 
+                  onClick={() => handleEditAppointment(appointment)}
+                  className={styles.editBtn}
+                >
+                  ✏️ Editar
+                </button>
+                <button 
+                  onClick={() => handleDeleteClick(appointment.id)}
+                  className={styles.deleteBtn}
+                >
+                  🗑️ Eliminar
+                </button>
+                <select
+                  value={appointment.status}
+                  onChange={(e) => handleStatusChange(appointment.id, e.target.value as Appointment['status'])}
+                  style={{ 
+                    padding: '6px 8px', 
+                    borderRadius: '6px', 
+                    border: '1px solid #ccc',
+                    fontSize: '12px'
+                  }}
+                >
+                  <option value="pending">Pendiente</option>
+                  <option value="confirmed">Confirmada</option>
+                  <option value="completed">Completada</option>
+                </select>
               </div>
             </div>
           ))}
@@ -170,7 +277,7 @@ const AgendaPage = () => {
           <div className={styles.empty}>
             <p>No tienes citas programadas</p>
             <button onClick={() => setShowForm(true)} className={styles.addBtn}>
-              Agregar primera cita
+              Agendar primera cita
             </button>
           </div>
         )}

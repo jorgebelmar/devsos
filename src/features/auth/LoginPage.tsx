@@ -49,7 +49,7 @@ const LoginPage = () => {
   return (
     <div className={styles.loginContainer}>
       <form onSubmit={handleSubmit} className={styles.loginForm}>
-        <h2>Bienvenido de vuelta</h2>
+        <h2>Bienvenido</h2>
         
         <div className={styles.inputGroup}>
           <input
