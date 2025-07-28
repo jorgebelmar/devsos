@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import Layout from '../../components/Layout/Layout';
+import React, { useState } from 'react';
+import Layout from '../../../devsos-frontend/src/components/Layout/Layout';
 import styles from './AgendaPage.module.css';
 
 interface Appointment {

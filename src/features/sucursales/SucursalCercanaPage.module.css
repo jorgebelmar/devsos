@@ -1,0 +1,257 @@
+.sucursalesContainer {
+  max-width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.header h1 {
+  color: #1f2937;
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.searchContainer {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 250px;
+  padding: 12px 20px;
+  border: 2px solid #e1e5e9;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.filterSelect {
+  padding: 12px 16px;
+  border: 2px solid #e1e5e9;
+  border-radius: 12px;
+  font-size: 16px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.sucursalesList {
+  display: grid;
+  gap: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+}
+
+.sucursalCard {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sucursalCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+.sucursalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.sucursalName {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  flex: 1;
+}
+
+.distanceBadge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.sucursalInfo {
+  margin-bottom: 20px;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+  color: #4b5563;
+  font-size: 14px;
+}
+
+.infoItem strong {
+  color: #374151;
+  margin-left: 8px;
+}
+
+.servicesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 15px 0;
+}
+
+.serviceTag {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.cardActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.primaryBtn {
+  flex: 1;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.primaryBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.secondaryBtn {
+  background: #f3f4f6;
+  color: #374151;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.secondaryBtn:hover {
+  background: #e5e7eb;
+  transform: translateY(-2px);
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 10px 0;
+}
+
+.stars {
+  color: #fbbf24;
+  font-size: 16px;
+}
+
+.ratingText {
+  font-size: 14px;
+  color: #6b7280;
+  margin-left: 5px;
+}
+
+.openStatus {
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.open {
+  color: #10b981;
+}
+
+.closed {
+  color: #ef4444;
+}
+
+.noResults {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6b7280;
+}
+
+.noResults p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.loadingContainer {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .searchContainer {
+    flex-direction: column;
+  }
+  
+  .searchInput {
+    min-width: auto;
+  }
+  
+  .sucursalesList {
+    grid-template-columns: 1fr;
+  }
+  
+  .cardActions {
+    flex-direction: column;
+  }
+  
+  .sucursalHeader {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+}
